@@ -5,6 +5,11 @@
     "es2020": true,
     "node": true
   },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   "ignorePatterns": ["dist", ".eslintrc"],
   "extends": [
     "airbnb",
