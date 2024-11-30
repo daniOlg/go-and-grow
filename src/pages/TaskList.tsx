@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import {
-  IonContent, IonHeader, IonList, IonItem, IonButton, IonPage, IonTitle, IonToolbar,
+  IonButton, IonContent, IonHeader, IonItem, IonList, IonPage, IonTitle, IonToolbar,
 } from '@ionic/react';
-
-type Task = {
-  id: string;
-  title: string;
-  description: string;
-};
+import { TaskForm } from '@/pages';
+import { Task } from '@/schemas';
 
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     setTasks(Array.from({ length: 10 }, (_, i) => ({
@@ -20,11 +17,18 @@ export function TaskList() {
     } as Task)));
   }, []);
 
+  const addTask = (task: Task) => {
+    setTasks((prevTasks) => [...prevTasks, task]);
+    setShowForm(false);
+  };
+
   const deleteTask = (id: string) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
-  return (
+  return showForm ? (
+    <TaskForm addTask={addTask} />
+  ) : (
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -32,18 +36,17 @@ export function TaskList() {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonButton expand="block" onClick={() => setShowForm(true)}>
+          Nueva Tarea
+        </IonButton>
         <IonList inset>
           {tasks.map((task) => (
             <IonItem key={task.id}>
               <div>
-                <h4>{task.title}</h4>
+                <h3>{task.title}</h3>
                 <p>{task.description}</p>
               </div>
-              <IonButton
-                color="danger"
-                slot="end"
-                onClick={() => deleteTask(task.id)}
-              >
+              <IonButton color="danger" slot="end" onClick={() => deleteTask(task.id)}>
                 Eliminar
               </IonButton>
             </IonItem>
