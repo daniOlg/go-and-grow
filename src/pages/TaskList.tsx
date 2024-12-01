@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  IonButton, IonContent, IonHeader, IonItem, IonList, IonPage, IonTitle, IonToolbar,
+  IonButton, IonContent, IonHeader, IonImg, IonItem, IonList, IonPage, IonTitle, IonToolbar,
 } from '@ionic/react';
 import { TaskForm } from '@/pages';
 import { Task } from '@/schemas';
@@ -45,6 +45,17 @@ export function TaskList() {
               <div>
                 <h3>{task.title}</h3>
                 <p>{task.description}</p>
+                {task.location && (
+                  <p>
+                    Ubicación:
+                    {' '}
+                    {task.location.latitude}
+                    ,
+                    {' '}
+                    {task.location.longitude}
+                  </p>
+                )}
+                {task.image && <IonImg src={task.image} />}
               </div>
               <IonButton color="danger" slot="end" onClick={() => deleteTask(task.id)}>
                 Eliminar
