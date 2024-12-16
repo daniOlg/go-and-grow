@@ -14,12 +14,13 @@
 - [x] Integrar GPS para registrar la ubicación donde se crea cada tarea.
 
 ## Integración con servicios web y APIs
+- [x] Implementar sistema de login con Google
 - [ ] Implementar la sincronización de tareas con un servicio web o API externa para almacenarlas de forma remota.
 - [ ] Permitir la importación de tareas desde una API externa para completar la lista de tareas.
 
 ## Pruebas de funcionalidad
-- [ ] Incluir pruebas automatizadas para verificar la funcionalidad de captura de imágenes.
-- [ ] Incluir pruebas automatizadas para verificar la funcionalidad de obtención de ubicación.
+- [x] Incluir pruebas automatizadas para verificar la funcionalidad de captura de imágenes.
+- [x] Incluir pruebas automatizadas para verificar la funcionalidad de obtención de ubicación.
 
 ## Almacenamiento local avanzado
 - [x] Implementar almacenamiento local utilizando Capacitor para guardar las tareas en el dispositivo incluso sin conexión a internet.
