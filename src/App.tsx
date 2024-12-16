@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { IonReactRouter } from '@ionic/react-router';
-
-import { TaskList } from '@/pages';
+import { Login, TaskList } from '@/pages';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -36,20 +37,43 @@ import './theme/variables.css';
 
 /* Tailwind CSS */
 import './styles/tailwind.css';
+import { Layout } from '@/components/Layout';
+import { PrivateRoute } from '@/components/PrivateRoute';
 
 setupIonicReact();
 
 export function App() {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    GoogleAuth.initialize({
+      clientId: import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID,
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true,
+    }).then(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/tasks">
-            <TaskList />
-          </Route>
+          {/* Rutas públicas */}
           <Route exact path="/">
             <Redirect to="/tasks" />
           </Route>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+
+          {/* Rutas privadas */}
+          <Layout>
+            <PrivateRoute exact path="/tasks" component={TaskList} />
+          </Layout>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

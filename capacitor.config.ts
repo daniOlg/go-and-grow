@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 import { CameraResultType } from "@capacitor/camera";
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'cl.dani.goandgrow',
   appName: 'go-and-grow',
   webDir: 'dist',
   plugins: {
