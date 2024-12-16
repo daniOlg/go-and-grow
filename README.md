@@ -1,14 +1,8 @@
-### Vista de inicio de sesión
-![Login](./images/1-login.jpg)
-
-### Vista de la lista de tareas
-![Lista de Tareas](./images/2-list.jpg)
-
-### Crear nueva tarea
-![Nueva Tarea](./images/3-new-task.jpg)
-
-### Tarea con metadatos (imagen y ubicación)
-![Tarea con Metadatos](./images/4-task-with-metadata.jpg)
+| Vista de Inicio de Sesión                                | Vista de la Lista de Tareas                                       |
+|----------------------------------------------------------|-------------------------------------------------------------------|
+| <img src="./images/1-login.jpg" alt="Login" width="200"> | <img src="./images/2-list.jpg" alt="Lista de Tareas" width="200"> |
+| Crear Nueva Tarea                                        | Tarea con Metadatos (Imagen y Ubicación)                          |
+| <img src="./images/3-new-task.jpg" alt="Nueva Tarea" width="200"> | <img src="./images/4-task-with-metadata.jpg" alt="Tarea con Metadatos" width="200"> |
 
 # Checklist de Implementación
 
