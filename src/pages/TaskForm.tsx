@@ -26,30 +26,42 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
   const [description, setDescription] = useState('');
 
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const handleAddTask = async () => {
-    const validationResult = TaskSchema.safeParse({ title, description });
-
-    if (!validationResult.success) {
-      setError(validationResult.error.errors[0].message);
-      return;
-    }
-
-    await addTask({
-      title,
-      description,
-    });
-
+  const dismissModal = () => {
     setTitle('');
     setDescription('');
+
+    setError(null);
     onClose();
   };
 
+  const handleAddTask = async () => {
+    try {
+      setSaving(true);
+      const validationResult = TaskSchema.safeParse({ title, description });
+
+      if (!validationResult.success) {
+        setError(validationResult.error.errors[0].message);
+        return;
+      }
+
+      await addTask({
+        title,
+        description,
+      });
+
+      dismissModal();
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <IonModal isOpen={show} onDidDismiss={onClose}>
+    <IonModal isOpen={show} onDidDismiss={dismissModal}>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Agregar Tarea</IonTitle>
+          <IonTitle className="text-center">Agregar Tarea</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -58,6 +70,7 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
           <IonItem>
             <IonLabel position="stacked">Título</IonLabel>
             <IonInput
+              disabled={saving}
               value={title}
               placeholder="Escribe el título de la tarea"
               onIonChange={(e) => setTitle(e.detail.value!)}
@@ -67,6 +80,7 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
           <IonItem>
             <IonLabel position="stacked">Descripción</IonLabel>
             <IonInput
+              disabled={saving}
               value={description}
               placeholder="Escribe una descripción"
               onIonChange={(e) => setDescription(e.detail.value!)}
@@ -84,12 +98,14 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
           />
         )}
 
-        <IonButton expand="block" color="primary" onClick={handleAddTask}>
+        <IonButton className="ion-margin-top" expand="block" color="primary" onClick={handleAddTask} disabled={saving}>
           Agregar Tarea
         </IonButton>
-        <IonButton expand="block" color="medium" onClick={onClose}>
+        <IonButton expand="block" color="medium" onClick={onClose} disabled={saving}>
           Cancelar
         </IonButton>
+
+        { saving && <div className="font-bold ion-padding-top text-center animate-pulse">Guardando...</div> }
       </IonContent>
     </IonModal>
   );
