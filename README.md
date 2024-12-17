@@ -1,8 +1,8 @@
-| Vista de Inicio de Sesión                                | Vista de la Lista de Tareas                                       |
-|----------------------------------------------------------|-------------------------------------------------------------------|
-| <img src="./images/1-login.jpg" alt="Login" width="200"> | <img src="./images/2-list.jpg" alt="Lista de Tareas" width="200"> |
-| Crear Nueva Tarea                                        | Tarea con Metadatos (Imagen y Ubicación)                          |
-| <img src="./images/3-new-task.jpg" alt="Nueva Tarea" width="200"> | <img src="./images/4-task-with-metadata.jpg" alt="Tarea con Metadatos" width="200"> |
+| Vista de inicio de sesión                                         | Inicio de sesión con Google                                               |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------|
+| <img src="./images/1-login.jpg" alt="Vista de inicio de sesión" width="200">          | <img src="./images/2-login-google.jpg" alt="Inicio de sesión con Google" width="200"> |
+| Lista de tareas                                                   | Formulario de nueva tarea                                                 |
+| <img src="./images/3-list.jpg" alt="Lista de tareas" width="200"> | <img src="./images/4-new-task.jpg" alt="Formulario de nueva tarea" width="200"> |
 
 # Checklist de Implementación
 
