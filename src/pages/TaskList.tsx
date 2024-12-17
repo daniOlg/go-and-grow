@@ -1,69 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
-  IonButton, IonContent, IonHeader, IonImg, IonItem, IonList, IonPage, IonTitle, IonToolbar,
+  IonButton,
+  IonCheckbox,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/react';
-import { TaskForm } from '@/pages';
-import { Task } from '@/schemas';
+import { TaskForm } from '@/pages/TaskForm';
+import { useTaskList } from '@/hooks/useTaskList';
+import { useTaskUpdate } from '@/hooks/useTaskUpdate';
 
 export function TaskList() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { tasks, status } = useTaskList();
+  const { toggleTaskCompleted } = useTaskUpdate();
+
   const [showForm, setShowForm] = useState(false);
 
-  useEffect(() => {
-    setTasks(Array.from({ length: 10 }, (_, i) => ({
-      id: (i + 1).toString(),
-      title: `Tarea ${i + 1}`,
-      description: `Descripción de la tarea ${i + 1}`,
-    } as Task)));
-  }, []);
+  if (status === 'loading') {
+    return <div>Cargando tareas...</div>;
+  }
 
-  const addTask = (task: Task) => {
-    setTasks((prevTasks) => [...prevTasks, task]);
-    setShowForm(false);
-  };
-
-  const deleteTask = (id: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  };
-
-  return showForm ? (
-    <TaskForm addTask={addTask} />
-  ) : (
+  return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Lista de Tareas</IonTitle>
+          <IonTitle>Mis Tareas</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+
+      <IonContent className="ion-padding">
         <IonButton expand="block" onClick={() => setShowForm(true)}>
           Nueva Tarea
         </IonButton>
-        <IonList inset>
+
+        <IonList>
           {tasks.map((task) => (
-            <IonItem key={task.id}>
-              <div>
-                <h3>{task.title}</h3>
+            <IonItem
+              key={task.id}
+              className={task.completed ? 'task-completed' : ''}
+            >
+              <IonCheckbox
+                checked={task.completed}
+                onIonChange={() => toggleTaskCompleted(task.id, task.completed)}
+                slot="start"
+              />
+              <IonLabel>
+                <h2 className={task.completed ? 'line-through' : ''}>{task.title}</h2>
                 <p>{task.description}</p>
-                {task.location && (
-                  <p>
-                    Ubicación:
-                    {' '}
-                    {task.location.latitude}
-                    ,
-                    {' '}
-                    {task.location.longitude}
-                  </p>
-                )}
-                {task.image && <IonImg src={task.image} />}
-              </div>
-              <IonButton color="danger" slot="end" onClick={() => deleteTask(task.id)}>
-                Eliminar
-              </IonButton>
+              </IonLabel>
             </IonItem>
           ))}
         </IonList>
+
+        {tasks.length === 0 && (
+          <div className="text-center">No hay tareas disponibles.</div>
+        )}
       </IonContent>
+
+      <TaskForm show={showForm} onClose={() => setShowForm(false)} />
     </IonPage>
   );
 }

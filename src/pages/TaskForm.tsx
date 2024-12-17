@@ -1,145 +1,76 @@
-import { useState } from 'react';
 import {
   IonButton,
   IonContent,
   IonHeader,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonPage,
-  IonText,
+  IonModal,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { Camera, CameraResultType } from '@capacitor/camera';
-import { Geolocation } from '@capacitor/geolocation';
+import { useState } from 'react';
+import { useTaskAdd } from '@/hooks/useTaskAdd';
 
-import { Task, TaskSchema } from '@/schemas';
+interface TaskFormProps {
+  show: boolean;
+  onClose: () => void;
+}
 
-type Props = {
-  addTask: (task: Task) => void;
-};
+export function TaskForm({ show, onClose }: TaskFormProps) {
+  const { addTask } = useTaskAdd();
 
-export function TaskForm({ addTask }: Props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState<string | null>(null);
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [errors, setErrors] = useState<{ title?: string; description?: string }>({});
 
   const handleAddTask = async () => {
-    const result = TaskSchema.safeParse({
-      id: Date.now().toString(),
+    await addTask({
       title,
       description,
-      image,
-      location,
     });
 
-    if (!result.success) {
-      const validationErrors = result.error.flatten().fieldErrors;
-      setErrors({
-        title: validationErrors.title?.[0],
-        description: validationErrors.description?.[0],
-      });
-      return;
-    }
-
-    setErrors({});
-    addTask(result.data);
     setTitle('');
     setDescription('');
-    setImage(null);
-    setLocation(null);
-  };
-
-  const captureImage = async () => {
-    try {
-      const photo = await Camera.getPhoto({
-        resultType: CameraResultType.DataUrl,
-        quality: 90,
-      });
-      setImage(photo.dataUrl!);
-    } catch (error) {
-      console.error('Error al capturar la imagen', error);
-    }
-  };
-
-  const getLocation = async () => {
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      setLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-    } catch (error) {
-      console.error('Error al obtener la ubicación', error);
-    }
+    onClose();
   };
 
   return (
-    <IonPage>
+    <IonModal isOpen={show} onDidDismiss={onClose}>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Agregar Nueva Tarea</IonTitle>
+          <IonTitle>Agregar Tarea</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+
+      <IonContent className="ion-padding">
         <IonList>
           <IonItem>
-            <IonLabel position="floating">Título</IonLabel>
+            <IonLabel position="stacked">Título</IonLabel>
             <IonInput
               value={title}
+              placeholder="Escribe el título de la tarea"
               onIonChange={(e) => setTitle(e.detail.value!)}
             />
           </IonItem>
-          {errors.title && (
-            <IonText color="danger">
-              <p>{errors.title}</p>
-            </IonText>
-          )}
+
           <IonItem>
-            <IonLabel position="floating">Descripción</IonLabel>
+            <IonLabel position="stacked">Descripción</IonLabel>
             <IonInput
               value={description}
+              placeholder="Escribe una descripción"
               onIonChange={(e) => setDescription(e.detail.value!)}
             />
           </IonItem>
-          {errors.description && (
-            <IonText color="danger">
-              <p>{errors.description}</p>
-            </IonText>
-          )}
-          <IonItem>
-            {image && <IonImg src={image} />}
-            <IonButton expand="block" onClick={captureImage}>
-              Capturar Imagen
-            </IonButton>
-          </IonItem>
-          <IonItem>
-            <IonButton expand="block" onClick={getLocation}>
-              Registrar Ubicación
-            </IonButton>
-            {location && (
-              <IonText>
-                <p>
-                  Ubicación:
-                  {' '}
-                  {location.latitude}
-                  ,
-                  {' '}
-                  {location.longitude}
-                </p>
-              </IonText>
-            )}
-          </IonItem>
-          <IonButton expand="block" onClick={handleAddTask}>
-            Guardar Tarea
-          </IonButton>
         </IonList>
+
+        <IonButton expand="block" color="primary" onClick={handleAddTask}>
+          Agregar Tarea
+        </IonButton>
+        <IonButton expand="block" color="medium" onClick={onClose}>
+          Cancelar
+        </IonButton>
       </IonContent>
-    </IonPage>
+    </IonModal>
   );
 }

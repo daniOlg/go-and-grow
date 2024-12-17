@@ -15,7 +15,7 @@
 
 ## Integración con servicios web y APIs
 - [x] Implementar sistema de login con Google
-- [ ] Implementar la sincronización de tareas con un servicio web o API externa para almacenarlas de forma remota.
+- [x] Implementar la sincronización de tareas con un servicio web o API externa para almacenarlas de forma remota.
 - [ ] Permitir la importación de tareas desde una API externa para completar la lista de tareas.
 
 ## Pruebas de funcionalidad
@@ -29,8 +29,8 @@
 - [x] Integrar un sistema básico de autenticación de usuarios para proteger las tareas y permitir múltiples usuarios.
 
 ## Comunicación con APIs externas
-- [ ] Ampliar la integración con APIs externas para:
-  - [ ] Sincronización en tiempo real de las tareas.
+- [x] Ampliar la integración con APIs externas para:
+  - [x] Sincronización en tiempo real de las tareas.
   - [ ] Obtención de datos adicionales para cada tarea.
 
 ## Otros

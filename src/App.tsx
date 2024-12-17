@@ -3,9 +3,12 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { IonReactRouter } from '@ionic/react-router';
-import { AuthProvider, useFirebaseApp } from 'reactfire';
+import {
+  AuthProvider, FirestoreProvider, useFirebaseApp, useInitFirestore,
+} from 'reactfire';
 import { getAuth } from 'firebase/auth';
-import { Login, TaskList } from '@/pages';
+import { initializeFirestore, memoryLocalCache } from 'firebase/firestore';
+import { Login } from '@/pages';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -38,15 +41,28 @@ import './theme/variables.css';
 
 /* Tailwind CSS */
 import './styles/tailwind.css';
+
 import { Layout } from '@/components/Layout';
 import { PrivateRoute } from '@/components/PrivateRoute';
+import { TasksPage } from '@/pages/TasksPage';
 
 setupIonicReact();
 
 export function App() {
   const firebaseApp = useFirebaseApp();
+  const auth = getAuth(firebaseApp);
+
+  const { status, data: firestoreInstance } = useInitFirestore(
+    async (_firebaseApp) => new Promise((resolve) => {
+      const firestore = initializeFirestore(_firebaseApp, {
+        localCache: memoryLocalCache(),
+      });
+      resolve(firestore);
+    }),
+  );
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     GoogleAuth.initialize({
       clientId: import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID,
@@ -57,29 +73,31 @@ export function App() {
     });
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (loading || status === 'loading') {
+    return <div className="animate-pulse">Loading...</div>;
   }
 
   return (
     <IonApp>
-      <AuthProvider sdk={getAuth(firebaseApp)}>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            {/* Rutas públicas */}
-            <Route exact path="/">
-              <Redirect to="/tasks" />
-            </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
+      <AuthProvider sdk={auth}>
+        <FirestoreProvider sdk={firestoreInstance}>
+          <IonReactRouter>
+            <IonRouterOutlet>
+              {/* Rutas públicas */}
+              <Route exact path="/">
+                <Redirect to="/tasks" />
+              </Route>
+              <Route exact path="/login">
+                <Login />
+              </Route>
 
-            {/* Rutas privadas */}
-            <Layout>
-              <PrivateRoute exact path="/tasks" component={TaskList} />
-            </Layout>
-          </IonRouterOutlet>
-        </IonReactRouter>
+              {/* Rutas privadas */}
+              <Layout>
+                <PrivateRoute exact path="/tasks" component={TasksPage} />
+              </Layout>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </FirestoreProvider>
       </AuthProvider>
     </IonApp>
   );

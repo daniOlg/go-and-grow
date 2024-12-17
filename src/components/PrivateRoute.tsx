@@ -1,22 +1,25 @@
-import { FunctionComponent } from 'react';
+import { ComponentType } from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { useUser } from '@/hooks/useUser';
+import { useUser } from 'reactfire';
 
-interface PrivateRouteProps extends Omit<RouteProps, 'component'> {
-  component: FunctionComponent<any>;
-}
+export function PrivateRoute({
+  component: Component,
+  ...rest
+}: RouteProps & { component: ComponentType<any> }) {
+  const { data: user, status } = useUser();
 
-export function PrivateRoute({ component: Component, ...rest }: PrivateRouteProps) {
-  const { user, loading } = useUser();
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
-  if (loading) {
-    return <div>Cargando...</div>;
+  if (!user) {
+    return <Redirect to="/login" />;
   }
 
   return (
     <Route
       {...rest}
-      render={(props) => (user ? <Component {...props} /> : <Redirect to="/login" />)}
+      render={(props) => <Component {...props} />}
     />
   );
 }
