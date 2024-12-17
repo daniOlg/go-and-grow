@@ -1,30 +1,28 @@
 import {
   IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar,
 } from '@ionic/react';
-import { GoogleAuth, User } from '@codetrix-studio/capacitor-google-auth';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { Preferences } from '@capacitor/preferences';
 import { useHistory } from 'react-router';
+import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { useAuth } from 'reactfire';
 
 export function Login() {
   const history = useHistory();
+  const auth = useAuth();
 
   const handleGoogleSignIn = async () => {
     const res = await GoogleAuth.signIn();
 
-    const user: User = {
-      id: res.id,
-      email: res.email,
-      name: res.name,
-      familyName: res.familyName,
-      givenName: res.givenName,
-      imageUrl: res.imageUrl,
-      serverAuthCode: res.serverAuthCode,
+    const googleUser = {
       authentication: {
-        accessToken: res.authentication.accessToken,
         idToken: res.authentication.idToken,
-        refreshToken: res.authentication.refreshToken,
       },
     };
+
+    const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
+    const result = await signInWithCredential(auth, credential);
+    const { user } = result;
 
     await Preferences.set({ key: 'user', value: JSON.stringify(user) });
     history.push('/tasks');

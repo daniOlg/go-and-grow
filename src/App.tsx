@@ -3,6 +3,8 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { IonReactRouter } from '@ionic/react-router';
+import { AuthProvider, useFirebaseApp } from 'reactfire';
+import { getAuth } from 'firebase/auth';
 import { Login, TaskList } from '@/pages';
 
 /* Core CSS required for Ionic components to work properly */
@@ -27,7 +29,6 @@ import '@ionic/react/css/display.css';
  * For more info, please see:
  * https://ionicframework.com/docs/theming/dark-mode
  */
-
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 import '@ionic/react/css/palettes/dark.system.css';
@@ -43,6 +44,8 @@ import { PrivateRoute } from '@/components/PrivateRoute';
 setupIonicReact();
 
 export function App() {
+  const firebaseApp = useFirebaseApp();
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     GoogleAuth.initialize({
@@ -60,22 +63,24 @@ export function App() {
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          {/* Rutas públicas */}
-          <Route exact path="/">
-            <Redirect to="/tasks" />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
+      <AuthProvider sdk={getAuth(firebaseApp)}>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            {/* Rutas públicas */}
+            <Route exact path="/">
+              <Redirect to="/tasks" />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
 
-          {/* Rutas privadas */}
-          <Layout>
-            <PrivateRoute exact path="/tasks" component={TaskList} />
-          </Layout>
-        </IonRouterOutlet>
-      </IonReactRouter>
+            {/* Rutas privadas */}
+            <Layout>
+              <PrivateRoute exact path="/tasks" component={TaskList} />
+            </Layout>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </AuthProvider>
     </IonApp>
   );
 }

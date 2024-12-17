@@ -46,9 +46,9 @@ export function Layout({ children }: LayoutProps) {
             {user && (
               <IonButton onClick={() => setPopoverOpen(true)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {user.imageUrl && (
+                  {user.photoURL && (
                     <IonImg
-                      src={user.imageUrl}
+                      src={user.photoURL}
                       style={{
                         width: '32px',
                         height: '32px',
@@ -57,7 +57,7 @@ export function Layout({ children }: LayoutProps) {
                       }}
                     />
                   )}
-                  {user.givenName || 'Usuario'}
+                  {user.displayName || 'Usuario'}
                 </div>
               </IonButton>
             )}
@@ -71,9 +71,9 @@ export function Layout({ children }: LayoutProps) {
           onDidDismiss={() => setPopoverOpen(false)}
         >
           <div style={{ padding: '1rem', textAlign: 'center' }}>
-            {user?.imageUrl && (
+            {user?.photoURL && (
               <IonImg
-                src={user.imageUrl}
+                src={user.photoURL}
                 style={{
                   width: '64px',
                   height: '64px',
@@ -86,7 +86,7 @@ export function Layout({ children }: LayoutProps) {
             <p style={{ marginBottom: '1rem' }}>
               <strong>Usuario:</strong>
               {' '}
-              {user?.givenName || 'N/A'}
+              {user?.displayName || 'N/A'}
             </p>
             <IonButton expand="block" onClick={handleSignOut} color="danger">
               Cerrar Sesión
