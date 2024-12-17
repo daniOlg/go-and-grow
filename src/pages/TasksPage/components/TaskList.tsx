@@ -7,10 +7,12 @@ import { useTaskList } from '@/hooks/useTaskList';
 import { useTaskUpdate } from '@/hooks/useTaskUpdate';
 import { ImageModal } from '@/components/ImageModal';
 import { LocationModal } from '@/components/LocationModal';
+import { useTaskDelete } from '@/hooks/useTaskDelete';
 
 export function TaskList() {
   const { tasks, status } = useTaskList();
   const { toggleTaskCompleted } = useTaskUpdate();
+  const { deleteTask } = useTaskDelete();
 
   const [showForm, setShowForm] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -58,18 +60,29 @@ export function TaskList() {
                 <p>{task.description}</p>
               </IonLabel>
 
-              {task.image
-                && (
-                <IonButton onClick={() => handleViewImage(task.image!)} slot="end">
-                  Ver Imagen
-                </IonButton>
-                )}
-              {task.location
-                && (
-                <IonButton onClick={() => handleViewLocation(task.location!)} slot="end">
-                  Ver Ubicación
-                </IonButton>
-                )}
+              <IonList>
+                {task.image
+                    && (
+                    <IonItem lines="none">
+                      <IonButton color="secondary" onClick={() => handleViewImage(task.image!)} slot="end">
+                        Ver Imagen
+                      </IonButton>
+                    </IonItem>
+                    )}
+                {task.location
+                  && (
+                  <IonItem lines="none">
+                    <IonButton onClick={() => handleViewLocation(task.location!)} slot="end">
+                      Ver Ubicación
+                    </IonButton>
+                  </IonItem>
+                  )}
+                <IonItem lines="none">
+                  <IonButton color="danger" onClick={() => deleteTask(task.id!)} slot="end">
+                    Eliminar
+                  </IonButton>
+                </IonItem>
+              </IonList>
             </IonItem>
           ))}
         </IonList>
