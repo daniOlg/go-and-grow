@@ -7,11 +7,12 @@ import {
   IonLabel,
   IonList,
   IonModal,
-  IonTitle,
+  IonTitle, IonToast,
   IonToolbar,
 } from '@ionic/react';
 import { useState } from 'react';
 import { useTaskAdd } from '@/hooks/useTaskAdd';
+import { TaskSchema } from '@/schemas';
 
 interface TaskFormProps {
   show: boolean;
@@ -24,7 +25,16 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleAddTask = async () => {
+    const validationResult = TaskSchema.safeParse({ title, description });
+
+    if (!validationResult.success) {
+      setError(validationResult.error.errors[0].message);
+      return;
+    }
+
     await addTask({
       title,
       description,
@@ -63,6 +73,16 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
             />
           </IonItem>
         </IonList>
+
+        {error && (
+          <IonToast
+            isOpen={!!error}
+            message={error}
+            duration={3000}
+            color="danger"
+            onDidDismiss={() => setError(null)}
+          />
+        )}
 
         <IonButton expand="block" color="primary" onClick={handleAddTask}>
           Agregar Tarea
