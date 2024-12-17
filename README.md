@@ -31,7 +31,7 @@
 ## Comunicación con APIs externas
 - [x] Ampliar la integración con APIs externas para:
   - [x] Sincronización en tiempo real de las tareas.
-  - [ ] Obtención de datos adicionales para cada tarea.
+  - [x] Obtención de datos adicionales para cada tarea.
 
 ## Otros
 - [x] Configurar el proyecto con el framework frontend elegido (Angular, React o Vue).
