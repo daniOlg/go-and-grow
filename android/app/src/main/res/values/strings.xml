@@ -4,5 +4,5 @@
     <string name="title_activity_main">go-and-grow</string>
     <string name="package_name">cl.dani.goandgrow</string>
     <string name="custom_url_scheme">cl.dani.goandgrow</string>
-    <string name="server_client_id">GOOGLE_KEY</string>
+    <string name="server_client_id">1083588582604-tmbdpqq4u7e86g1iomlin7lif2gki9st.apps.googleusercontent.com</string>
 </resources>

@@ -1,18 +1,20 @@
 import {
   IonButton,
   IonContent,
-  IonHeader,
+  IonHeader, IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonModal,
+  IonModal, IonText,
   IonTitle, IonToast,
   IonToolbar,
 } from '@ionic/react';
 import { useState } from 'react';
 import { useTaskAdd } from '@/hooks/useTaskAdd';
 import { TaskSchema } from '@/schemas';
+import { useCaptureImage } from '@/hooks/useCaptureImage';
+import { useGetLocation } from '@/hooks/useGetLocation';
 
 interface TaskFormProps {
   show: boolean;
@@ -21,6 +23,11 @@ interface TaskFormProps {
 
 export function TaskForm({ show, onClose }: TaskFormProps) {
   const { addTask } = useTaskAdd();
+
+  const { image, setImage, captureImage } = useCaptureImage();
+  const {
+    location, setLocation, gettingLocation, getLocation,
+  } = useGetLocation();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -31,6 +38,8 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
   const dismissModal = () => {
     setTitle('');
     setDescription('');
+    setImage(null);
+    setLocation(null);
 
     setError(null);
     onClose();
@@ -49,6 +58,8 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
       await addTask({
         title,
         description,
+        ...(image ? { image } : {}),
+        ...(location ? { location } : {}),
       });
 
       dismissModal();
@@ -66,7 +77,7 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <IonList>
+        <IonList className="ion-margin-bottom">
           <IonItem>
             <IonLabel position="stacked">Título</IonLabel>
             <IonInput
@@ -86,6 +97,49 @@ export function TaskForm({ show, onClose }: TaskFormProps) {
               onIonChange={(e) => setDescription(e.detail.value!)}
             />
           </IonItem>
+        </IonList>
+
+        <IonList className="ion-margin-bottom">
+          <IonItem>
+            <IonButton expand="block" onClick={captureImage}>
+              Capturar Imagen
+            </IonButton>
+          </IonItem>
+
+          {image && (
+            <IonItem className="ion-margin-top">
+              <IonImg src={image} />
+            </IonItem>
+          )}
+        </IonList>
+
+        <IonList className="ion-margin-bottom">
+          <IonItem>
+            <IonButton expand="block" onClick={getLocation}>
+              Registrar Ubicación
+            </IonButton>
+          </IonItem>
+
+          {gettingLocation && (
+            <IonItem className="ion-margin-top">
+              <IonText>Obteniendo ubicación...</IonText>
+            </IonItem>
+          )}
+
+          {location && (
+            <IonItem className="ion-margin-top">
+              <IonText>
+                <p>
+                  Ubicación:
+                  {' '}
+                  {location.latitude}
+                  ,
+                  {' '}
+                  {location.longitude}
+                </p>
+              </IonText>
+            </IonItem>
+          )}
         </IonList>
 
         {error && (

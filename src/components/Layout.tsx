@@ -41,7 +41,7 @@ export function Layout({ children }: LayoutProps) {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Mi Aplicación</IonTitle>
+          <IonTitle>Mis tareas</IonTitle>
           <IonButtons slot="end">
             {user && (
               <IonButton onClick={() => setPopoverOpen(true)}>
