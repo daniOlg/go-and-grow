@@ -7,7 +7,7 @@ import { useHistory } from 'react-router';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { useAuth } from 'reactfire';
 
-export function Login() {
+export function LoginPage() {
   const history = useHistory();
   const auth = useAuth();
 

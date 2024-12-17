@@ -1,17 +1,8 @@
 import { useState } from 'react';
 import {
-  IonButton,
-  IonCheckbox,
-  IonContent,
-  IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonPage,
-  IonTitle,
-  IonToolbar,
+  IonButton, IonCheckbox, IonContent, IonItem, IonLabel, IonList, IonPage,
 } from '@ionic/react';
-import { TaskForm } from '@/pages/TaskForm';
+import { TaskForm } from '@/pages/TasksPage/components/TaskForm';
 import { useTaskList } from '@/hooks/useTaskList';
 import { useTaskUpdate } from '@/hooks/useTaskUpdate';
 import { ImageModal } from '@/components/ImageModal';

@@ -8,7 +8,7 @@ import {
 } from 'reactfire';
 import { getAuth } from 'firebase/auth';
 import { initializeFirestore, memoryLocalCache } from 'firebase/firestore';
-import { Login } from '@/pages';
+import { LoginPage } from '@/pages';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -44,7 +44,7 @@ import './styles/tailwind.css';
 
 import { Layout } from '@/components/Layout';
 import { PrivateRoute } from '@/components/PrivateRoute';
-import { TasksPage } from '@/pages/TasksPage';
+import { TasksPage } from '@/pages/TasksPage/TasksPage';
 
 setupIonicReact();
 
@@ -88,7 +88,7 @@ export function App() {
                 <Redirect to="/tasks" />
               </Route>
               <Route exact path="/login">
-                <Login />
+                <LoginPage />
               </Route>
 
               {/* Rutas privadas */}
