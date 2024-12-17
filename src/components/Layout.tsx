@@ -13,18 +13,22 @@ import {
 import { useUser } from '@/hooks/useUser';
 import { Preferences } from '@capacitor/preferences';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { signOut } from 'firebase/auth';
+import { useAuth } from 'reactfire';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+  const auth = useAuth();
   const { user, loading } = useUser();
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
       await GoogleAuth.signOut();
+      await signOut(auth);
       await Preferences.remove({ key: 'user' });
       setPopoverOpen(false);
       window.location.reload();
